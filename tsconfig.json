@@ -5,6 +5,18 @@
   "references": [
     {
       "path": "./lib/domain"
+    },
+    {
+      "path": "./app/rest-api-e2e"
+    },
+    {
+      "path": "./app/rest-api"
+    },
+    {
+      "path": "./app/ui-e2e"
+    },
+    {
+      "path": "./app/ui"
     }
   ]
 }

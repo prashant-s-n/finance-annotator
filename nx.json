@@ -10,7 +10,8 @@
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/jest.config.[jt]s",
-      "!{projectRoot}/test-setup.[jt]s"
+      "!{projectRoot}/test-setup.[jt]s",
+      "!{projectRoot}/eslint.config.js"
     ],
     "sharedGlobals": []
   },
@@ -59,6 +60,12 @@
         "targetName": "test"
       },
       "exclude": ["app/rest-api-e2e/**/*"]
+    },
+    {
+      "plugin": "@nx/playwright/plugin",
+      "options": {
+        "targetName": "e2e"
+      }
     }
   ],
   "targetDefaults": {
@@ -74,6 +81,27 @@
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
+    },
+    "e2e-ci--**/*": {
+      "dependsOn": ["^build"]
+    }
+  },
+  "generators": {
+    "@nx/react": {
+      "application": {
+        "babel": true,
+        "style": "tailwind",
+        "linter": "eslint",
+        "bundler": "vite"
+      },
+      "component": {
+        "style": "tailwind"
+      },
+      "library": {
+        "style": "tailwind",
+        "linter": "eslint",
+        "unitTestRunner": "none"
+      }
     }
   }
 }
