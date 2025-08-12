@@ -17,8 +17,6 @@
     "strict": true,
     "target": "es2022",
     "customConditions": ["development"],
-    "paths": {
-      "@fortino/product-icon": ["lib/product-icon/src/index.ts"]
-    }
+    
   }
 }
