@@ -19,7 +19,7 @@ export const Transaction = Schema.Struct({
   /**
    * Amount of the transaction, contains the financial value with a currency
    */
-  amount: TransactionAmount,
+  amount: Amount,
   /**
    * Type of the transaction, whether debit or credit
    */

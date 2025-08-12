@@ -1,4 +1,4 @@
-import { Schema } from 'effect';
+import { BigDecimal, Schema } from 'effect';
 import { Currency } from './currency.js';
 
 /**
@@ -10,7 +10,7 @@ import { Currency } from './currency.js';
  */
 
 export const Amount = Schema.Struct({
-  amount: Schema.BigDecimalFromSelf,
+  amount: Schema.BigDecimal,
   currency: Currency,
 }).pipe(
   Schema.annotations({
