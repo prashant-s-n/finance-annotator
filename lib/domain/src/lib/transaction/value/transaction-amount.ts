@@ -1,5 +1,5 @@
 import { Schema } from 'effect';
-import { Currency } from '../../shared/value/currency.js';
+import { Amount } from '../../shared/value/amount.js';
 
 /**
  * @since 1.0.0
@@ -10,10 +10,7 @@ import { Currency } from '../../shared/value/currency.js';
  *
  */
 
-export const TransactionAmount = Schema.Struct({
-  amount: Schema.BigDecimalFromNumber,
-  currency: Currency,
-}).pipe(
+export const TransactionAmount = Schema.typeSchema(Amount).pipe(
   Schema.brand('TransactionAmount'),
   Schema.annotations({
     title: 'Transaction amount',
