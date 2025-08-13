@@ -1,4 +1,4 @@
-import { BigDecimal, Schema } from 'effect';
+import { Schema } from 'effect';
 import { Currency } from './currency.js';
 
 /**

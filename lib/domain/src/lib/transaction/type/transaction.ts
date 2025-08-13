@@ -1,8 +1,8 @@
 import { Schema } from 'effect';
-import { TransactionAmount } from '../value/transaction-amount.js';
 import { Amount } from '../../shared/value/amount.js';
+import { TransactionId } from './transaction-id.js';
 
-const TransactionType = Schema.Enums({
+export const TransactionType = Schema.Enums({
   Debit: 'debit',
   Credit: 'credit',
 });
@@ -11,7 +11,7 @@ export const Transaction = Schema.Struct({
   /**
    * Unique identifier for a transaction
    */
-  id: Schema.UUID,
+  id: TransactionId,
   /**
    * Short description of a transaction
    */
@@ -73,3 +73,6 @@ export const fromTransactionUnknown = (encoded: unknown): Transaction =>
  */
 export const toTransaction = (decoded: Transaction): EncodedTransaction =>
   Schema.encodeSync(Transaction)(decoded);
+
+
+export const makeTransaction = (trx : Transaction): Transaction => trx;
