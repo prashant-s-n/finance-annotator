@@ -1,5 +1,5 @@
 import { Schema } from "effect";
-import { Transaction } from "../type/transaction.js";
+import { Transaction } from "../type/index.js";
 
 /**
  * Arguments required to create a transaction

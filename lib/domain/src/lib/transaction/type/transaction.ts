@@ -1,6 +1,6 @@
 import { Schema } from 'effect';
-import { Amount } from '../../shared/value/amount.js';
-import { TransactionId } from './transaction-id.js';
+import { Amount } from '../../shared/value/index.js';
+import { TransactionId } from '../value/index.js';
 
 export const TransactionType = Schema.Enums({
   Debit: 'debit',
