@@ -4,9 +4,9 @@
 
 import { Effect } from "effect";
 import { CreateTransactionArg } from "../cmd/index.js";
-import { makeTransaction, Transaction } from "../type/transaction.js";
-import { TransactionError } from "../error/transaction.js";
-import { generateTransactionId } from "../type/transaction-id.js";
+import { makeTransaction, Transaction } from "../type/index.js";
+import { TransactionError } from "../error/index.js";
+import { generateTransactionId } from "../value/index.js";
 
 type EE<A, I> = Effect.Effect<A, I>;
 
