@@ -1,0 +1,69 @@
+{
+  "name": "@fortino/ingestor",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "@nx/esbuild:esbuild",
+        "outputs": [
+          "{options.outputPath}"
+        ],
+        "defaultConfiguration": "production",
+        "options": {
+          "platform": "node",
+          "outputPath": "app/ingestor/dist",
+          "format": [
+            "cjs"
+          ],
+          "bundle": false,
+          "main": "app/ingestor/src/main.ts",
+          "tsConfig": "app/ingestor/tsconfig.app.json",
+          "assets": [
+            "app/ingestor/src/assets"
+          ],
+          "esbuildOptions": {
+            "sourcemap": true,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        },
+        "configurations": {
+          "development": {},
+          "production": {
+            "esbuildOptions": {
+              "sourcemap": false,
+              "outExtension": {
+                ".js": ".js"
+              }
+            }
+          }
+        }
+      },
+      "serve": {
+        "continuous": true,
+        "executor": "@nx/js:node",
+        "defaultConfiguration": "development",
+        "dependsOn": [
+          "build"
+        ],
+        "options": {
+          "buildTarget": "@fortino/ingestor:build",
+          "runBuildTargetDependencies": false
+        },
+        "configurations": {
+          "development": {
+            "buildTarget": "@fortino/ingestor:build:development"
+          },
+          "production": {
+            "buildTarget": "@fortino/ingestor:build:production"
+          }
+        }
+      }
+    }
+  },
+  "devDependencies": {
+    "@fortino/domain":"workspace:*"
+  }
+}
