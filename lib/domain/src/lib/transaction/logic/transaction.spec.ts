@@ -22,5 +22,6 @@ describe("Transaction", () => {
         const trx = Effect.runSync(withTransaction(raw));
 
         expectTypeOf(trx).toEqualTypeOf<Transaction>();
-    })
-})
+    });
+
+});
