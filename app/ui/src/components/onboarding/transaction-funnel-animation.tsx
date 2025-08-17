@@ -1,211 +1,300 @@
 import React, { useState, useEffect } from 'react';
-import { FiHome, FiCoffee, FiBriefcase, FiTruck, FiGift, FiArrowUpRight, FiArrowDownLeft, FiTag } from 'react-icons/fi';
+import { 
+    FiCoffee, FiShoppingCart, 
+    FiTruck, 
+    FiArrowUpRight,
+    FiArrowUpLeft,
+    FiUser,
+    FiCalendar
+} from 'react-icons/fi';
+import { 
+    randFloat, 
+    rand,
+    randFood,
+    randProduct,
+    randFullName
+} from '@ngneat/falso';
+
+interface Transaction {
+    id: number;
+    description: string;
+    amount: string;
+    currencySymbol: string;
+    type: 'income' | 'expense';
+    category: string;
+    tag: string;
+    tagIcon: React.ComponentType<any>;
+    icon: React.ComponentType<any>;
+    isVisible: boolean;
+    isTagged: boolean;
+    timestamp: number;
+    date: string;
+    recipient: string;
+}
 
 export const TransactionFunnelAnimation: React.FC = () => {
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [isTagged, setIsTagged] = useState(false);
-    const [isTransitioning, setIsTransitioning] = useState(false);
-    
-    const transactions = [
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
+    const [nextId, setNextId] = useState(1);
+
+    const transactionCategories = [
         { 
-            amount: '$2,450.00',
-            type: 'income' as const,
-            name: 'Sarah Johnson',
-            date: 'Dec 15, 2023',
-            categoryIcon: FiHome,
-            categoryName: 'Housing & Real Estate Expenses',
-            color: '#10b981' // emerald-500
+            type: 'expense' as const, 
+            category: 'Food', 
+            tag: 'Food', 
+            tagIcon: FiCoffee,
+            getDescription: () => randFood()
         },
         { 
-            amount: '$89.50',
-            type: 'expense' as const,
-            name: 'Coffee Shop',
-            date: 'Dec 14, 2023',
-            categoryIcon: FiCoffee,
-            categoryName: 'Food & Dining Entertainment',
-            color: '#f43f5e' // rose-500
+            type: 'expense' as const, 
+            category: 'Grocery', 
+            tag: 'Grocery', 
+            tagIcon: FiShoppingCart,
+            getDescription: () => `${randProduct().title} Shopping`
         },
         { 
-            amount: '$1,200.00',
-            type: 'income' as const,
-            name: 'Emma Rodriguez',
-            date: 'Dec 13, 2023',
-            categoryIcon: FiBriefcase,
-            categoryName: 'Professional Salary & Benefits',
-            color: '#3b82f6' // blue-500
+            type: 'expense' as const, 
+            category: 'Travel', 
+            tag: 'Travel', 
+            tagIcon: FiTruck,
+            getDescription: () => 'Transportation'
         },
         { 
-            amount: '$350.75',
-            type: 'expense' as const,
-            name: 'Uber Ride',
-            date: 'Dec 12, 2023',
-            categoryIcon: FiTruck,
-            categoryName: 'Transportation & Travel Costs',
-            color: '#f97316' // orange-500
+            type: 'income' as const, 
+            category: 'Salary', 
+            tag: 'Salary', 
+            tagIcon: FiCoffee,
+            getDescription: () => 'Monthly Salary'
         },
         { 
-            amount: '$125.00',
-            type: 'income' as const,
-            name: 'Lisa Anderson',
-            date: 'Dec 11, 2023',
-            categoryIcon: FiGift,
-            categoryName: 'Gifts & Personal Contributions',
-            color: '#8b5cf6' // violet-500
+            type: 'income' as const, 
+            category: 'Freelance', 
+            tag: 'Freelance', 
+            tagIcon: FiShoppingCart,
+            getDescription: () => 'Freelance Work'
         }
     ];
-    
+
+    const createNewTransaction = (id: number): Transaction => {
+        const category = rand(transactionCategories);
+        const now = new Date();
+        const randomDaysAgo = Math.floor(Math.random() * 30); // Random date within last 30 days
+        const transactionDate = new Date(now.getTime() - (randomDaysAgo * 24 * 60 * 60 * 1000));
+        
+        return {
+            id,
+            description: category.getDescription(),
+            amount: randFloat({ min: 5, max: 5000, precision: 2 }).toFixed(2),
+            currencySymbol: rand(['$', '€', '£', '¥']),
+            type: category.type,
+            category: category.category,
+            tag: category.tag,
+            tagIcon: category.tagIcon,
+            icon: category.type === 'income' ? FiArrowUpRight : FiArrowUpLeft,
+            isVisible: false,
+            isTagged: false,
+            timestamp: Date.now(),
+            date: transactionDate.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric',
+                year: 'numeric'
+            }),
+            recipient: randFullName()
+        };
+    };
+
     useEffect(() => {
-        const interval = setInterval(() => {
-            setIsTagged(false);
-            setIsTransitioning(true);
+        // Initialize with first transaction
+        if (transactions.length === 0) {
+            const initialTransaction = createNewTransaction(nextId);
+            setNextId(prev => prev + 1);
+            setTransactions([initialTransaction]);
             
             setTimeout(() => {
-                setCurrentIndex((prev) => (prev + 1) % transactions.length);
-                setIsTransitioning(false);
-            }, 400); // Smooth transition duration
-        }, 3000);
-        
-        return () => clearInterval(interval);
-    }, [transactions.length]);
-    
-    useEffect(() => {
-        if (!isTransitioning) {
-            const tagTimer = setTimeout(() => {
-                setIsTagged(true);
-            }, 800); // Delay before showing tag
-            
-            return () => clearTimeout(tagTimer);
+                setTransactions(prev => 
+                    prev.map(t => ({ ...t, isVisible: true }))
+                );
+                setTimeout(() => {
+                    setTransactions(prev => 
+                        prev.map(t => ({ ...t, isTagged: true }))
+                    );
+                }, 800);
+            }, 100);
         }
-    }, [currentIndex, isTransitioning]);
-    
-    const currentTransaction = transactions[currentIndex];
-    
-    
-    // Skeleton Card Component
-    const SkeletonCard = ({ className = '' }: { className?: string }) => (
-        <div className={`w-64 h-36 rounded-xl shadow-lg border bg-white border-gray-200 p-4 ${className}`}>
-            <div className="h-full flex flex-col justify-center space-y-3 pb-8">
-                {/* Amount skeleton */}
-                <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 bg-blue-100 rounded-full animate-pulse"></div>
-                    <div className="w-24 h-6 bg-blue-100 rounded animate-pulse"></div>
-                    <div className="w-12 h-4 bg-blue-100 rounded animate-pulse"></div>
-                </div>
-                
-                {/* Name skeleton */}
-                <div className="w-32 h-4 bg-blue-100 rounded animate-pulse"></div>
-                
-                {/* Date skeleton */}
-                <div className="w-20 h-3 bg-blue-100 rounded animate-pulse"></div>
-            </div>
+
+        // Replace current transaction with a new one every 3 seconds
+        const replaceTransactionInterval = setInterval(() => {
+            const newTransaction = createNewTransaction(nextId);
+            setNextId(prev => prev + 1);
             
-            {/* Bottom skeleton */}
-            <div className="absolute bottom-0 left-0 right-0">
-                <div className="bg-blue-50 rounded-b-xl px-4 py-2 flex items-center justify-center space-x-2">
-                    <div className="w-4 h-4 bg-blue-100 rounded animate-pulse"></div>
-                    <div className="w-24 h-3 bg-blue-100 rounded animate-pulse"></div>
-                </div>
-            </div>
-        </div>
-    );
-    
+            // Replace the current transaction
+            setTransactions([newTransaction]);
+
+            // Make the transaction visible after a short delay
+            setTimeout(() => {
+                setTransactions(prev => 
+                    prev.map(t => 
+                        t.id === newTransaction.id 
+                            ? { ...t, isVisible: true }
+                            : t
+                    )
+                );
+
+                // Tag the transaction after another delay
+                setTimeout(() => {
+                    setTransactions(prev => 
+                        prev.map(t => 
+                            t.id === newTransaction.id 
+                                ? { ...t, isTagged: true }
+                                : t
+                        )
+                    );
+                }, 800);
+            }, 100);
+        }, 3000);
+
+        return () => {
+            clearInterval(replaceTransactionInterval);
+        };
+    }, [nextId]);
+
+    const getTagColor = (category: string) => {
+        return 'bg-black text-white border-black dark:bg-black dark:text-white dark:border-black';
+    };
+
+    const getIconColor = (type: 'income' | 'expense', isVisible: boolean) => {
+        if (!isVisible) return 'text-gray-400 dark:text-gray-600';
+        return type === 'income' ? 'text-green-600 dark:text-green-400' : 'text-blue-600 dark:text-blue-400';
+    };
+
+    const getIconBgColor = (type: 'income' | 'expense', isVisible: boolean) => {
+        if (!isVisible) return 'bg-gray-200 dark:bg-gray-700';
+        return type === 'income' ? 'bg-green-100 dark:bg-green-900/30' : 'bg-blue-100 dark:bg-blue-900/30';
+    };
+
     return (
-        <div className="relative w-full h-[600px] p-6 overflow-hidden flex flex-col items-center justify-center space-y-6">
-            {/* Top Skeleton Card */}
-            <SkeletonCard className="opacity-60 scale-95" />
-            
-            {/* Main Animated Card */}
-            <div 
-                className={`w-64 h-36 rounded-xl shadow-lg border bg-white border-gray-200 p-4 transition-all duration-400 ease-in-out z-10 ${
-                    isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
-                }`}
-            >
-                {/* Card Content */}
-                <div className="h-full flex flex-col justify-center space-y-1 pb-8">
-                    {/* Amount with Type Icon */}
-                    <div className="flex items-center">
-                        <div className={`flex items-center justify-center w-6 h-6 rounded-full mr-2 transition-all duration-500 ease-out ${
-                            isTagged 
-                                ? (currentTransaction.type === 'income' 
-                                    ? 'bg-green-100 text-green-600 scale-100 opacity-100' 
-                                    : 'bg-red-100 text-red-600 scale-100 opacity-100')
-                                : 'bg-gray-100 text-gray-400 scale-90 opacity-60'
-                        }`}>
-                            {currentTransaction.type === 'income' ? (
-                                <FiArrowUpRight className="w-3 h-3" />
-                            ) : (
-                                <FiArrowDownLeft className="w-3 h-3" />
-                            )}
-                        </div>
-                        <div className={`text-xl font-bold transition-all duration-500 ease-out ${
-                            isTagged 
-                                ? (currentTransaction.type === 'income' 
-                                    ? 'text-green-700 scale-100 opacity-100' 
-                                    : 'text-red-700 scale-100 opacity-100')
-                                : 'text-gray-400 scale-95 opacity-60'
-                        }`}>
-                            {currentTransaction.amount}
-                        </div>
-                        <div className={`text-xs font-medium uppercase tracking-wide ml-2 transition-all duration-500 ease-out delay-100 ${
-                            isTagged 
-                                ? (currentTransaction.type === 'income' 
-                                    ? 'text-green-600 translate-y-0 opacity-100' 
-                                    : 'text-red-600 translate-y-0 opacity-100')
-                                : 'text-gray-400 translate-y-1 opacity-60'
-                        }`}>
-                            {currentTransaction.type}
-                        </div>
+        <div className="w-full h-full flex items-left justify-left p-6">
+            <div className="bg-white dark:bg-gray-900 rounded-xl shadow-2xl p-6 w-full max-w-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div className="mb-6 text-left">
+                    <div className="flex items-center justify-center gap-4 mb-2">
+                        <img 
+                            src="/logo.png" 
+                            alt="Finnotate Logo" 
+                            className="w-20 object-contain"
+                        />
+                    <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                        Finnotate
+                        <span className="text-sm text-gray-600 block dark:text-gray-400 font-medium"> Self hosted finance annotator</span>
+                    </div>    
                     </div>
                     
-                    {/* Name */}
-                    <div className={`text-base font-medium transition-all duration-500 ease-out delay-150 ${
-                        isTagged ? 'text-gray-800 translate-y-0 opacity-100' : 'text-gray-400 translate-y-1 opacity-60'
-                    }`}>
-                        {currentTransaction.name}
-                    </div>
-                    
-                    {/* Date */}
-                    <div className={`text-xs transition-all duration-500 ease-out delay-200 ${
-                        isTagged ? 'text-gray-600 translate-y-0 opacity-100' : 'text-gray-400 translate-y-1 opacity-60'
-                    }`}>
-                        {currentTransaction.date}
-                    </div>
                 </div>
                 
-                {/* Bottom area */}
-                <div className="absolute bottom-0 left-0 right-0">
-                    {!isTagged ? (
-                        /* Processing State */
-                        <div className="bg-gray-100 rounded-b-xl px-4 py-2 flex items-center justify-center space-x-2 transition-all duration-300 ease-in">
-                            <div className="flex space-x-1">
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse"></div>
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                <div className="h-[350px] flex items-center justify-center overflow-hidden">
+                    {(() => {
+                        if (transactions.length === 0) {
+                            return <div className="text-gray-500 dark:text-gray-400">Loading...</div>;
+                        }
+                        
+                        const IconComponent = transactions[0].icon;
+                        const TagIconComponent = transactions[0].tagIcon;
+                        
+                        return (
+                            <div 
+                                key={transactions[0].id}
+                                className={`w-full h-full p-4 rounded-lg border transition-all duration-1000 ease-out transform flex flex-col justify-center ${
+                                    transactions[0].isVisible 
+                                        ? 'opacity-100 translate-y-0 scale-100 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700' 
+                                        : 'opacity-0 -translate-y-12 scale-95 bg-transparent border-transparent'
+                                }`}
+                            >
+                                {/* Main content container - left aligned */}
+                                <div className="flex items-start gap-4 mb-4">
+                                    {/* Income/Expense Icon */}
+                                    <div className={`flex-shrink-0 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all duration-700 ${
+                                        getIconBgColor(transactions[0].type, transactions[0].isVisible)
+                                    }`}>
+                                        <IconComponent
+                                            className={`w-7 h-7 transition-all duration-700 ${
+                                                getIconColor(transactions[0].type, transactions[0].isVisible)
+                                            }`}
+                                        />
+                                    </div>
+                                    
+                                    {/* Transaction Details - left aligned */}
+                                    <div className="flex flex-col items-start flex-1">
+                                        <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                                            {transactions[0].currencySymbol}{transactions[0].amount}
+                                        </div>
+                                        <div className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                                            {transactions[0].description}
+                                        </div>
+                                        
+                                        {/* Date and Recipient with icons */}
+                                        <div className="flex items-center gap-4 mb-3">
+                                            <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+                                                <FiCalendar className="w-3 h-3" />
+                                                <span>{transactions[0].date}</span>
+                                            </div>
+                                            <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+                                                <FiUser className="w-3 h-3" />
+                                                <span>{transactions[0].recipient}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Skeleton for additional details - left aligned with more lines */}
+                                        <div className="flex flex-col gap-2">
+                                            <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-20"></div>
+                                            <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-20"></div>
+                                            <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-30"></div>
+                                            <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-60"></div>
+                                            <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-60"></div>
+                                            <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-60"></div>
+                                            <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-60"></div>
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Bottom section with tag */}
+                                <div className={`w-full flex justify-center transition-all duration-1000 ease-out transform ${
+                                    transactions[0].isTagged 
+                                        ? 'opacity-100 scale-100 translate-y-0' 
+                                        : 'opacity-0 scale-95 translate-y-4'
+                                }`}>
+                                    <div className="relative inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg shadow-lg transition-all duration-300 hover:bg-blue-700 overflow-hidden">
+                                        <div className="flex items-center gap-3 relative z-10">
+                                            <div className="p-1">
+                                                <TagIconComponent className="w-4 h-4 text-white" />
+                                            </div>
+                                            <span className="text-sm font-semibold">{transactions[0].tag}</span>
+                                            <div className="h-4 w-px bg-blue-400 mx-1"></div>
+                                            <span className="text-sm font-bold">{transactions[0].currencySymbol}{transactions[0].amount}</span>
+                                        </div>
+                                        
+                                        {/* Shimmer effect */}
+                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20 transform -skew-x-12 animate-shimmer"></div>
+                                    </div>
+                                </div>
+                                
+                                {/* Minimal analytics */}
+                                <div className={`mt-4 text-center transition-all duration-1200 ease-out transform ${
+                                    transactions[0].isTagged 
+                                        ? 'opacity-100 scale-100 translate-y-0' 
+                                        : 'opacity-0 scale-95 translate-y-8'
+                                }`}>
+                                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                                        {Math.floor(Math.random() * 15) + 5} transactions this week • Top category: {rand(['Food', 'Shopping', 'Travel', 'Bills'])}
+                                    </div>
+                                </div>
                             </div>
-                            <span className="text-xs text-gray-500 font-medium">Processing...</span>
-                        </div>
-                    ) : (
-                        /* Category Tag with Tag Icon Only */
-                        <div 
-                            className={`rounded-b-xl px-4 py-2 flex items-center justify-center space-x-2 transition-all duration-700 ease-out transform scale-100 opacity-100 translate-y-0 ${
-                                currentTransaction.type === 'income' 
-                                    ? 'bg-green-100 text-green-800' 
-                                    : 'bg-red-100 text-red-800'
-                            }`}
-                            style={{ 
-                                backgroundColor: currentTransaction.type === 'income' ? '#dcfce7' : '#fecaca',
-                                animation: isTagged ? 'slideUpFade 0.7s ease-out' : 'none'
-                            }}
-                        >
-                            <FiTag className="w-4 h-4" />
-                            <span className="text-xs font-medium">{currentTransaction.categoryName}</span>
-                        </div>
-                    )}
+                        );
+                    })()
+                }
                 </div>
+                
+                
             </div>
-            
-            {/* Bottom Skeleton Card */}
-            <SkeletonCard className="opacity-60 scale-95" />
         </div>
     );
 };
