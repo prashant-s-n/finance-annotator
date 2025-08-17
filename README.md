@@ -1,4 +1,4 @@
-<img src="./assets/logo.png" alt="Fortino logo" width="118" height="120">
+<img src="./assets/logo.png" alt="Finnotate logo" width="118" height="120">
 
 # Finance Annotator
 
