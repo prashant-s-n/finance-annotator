@@ -1,5 +1,5 @@
 {
-  "name": "@fortino/ingestor",
+  "name": "@finnotate/ingestor",
   "version": "0.0.1",
   "private": true,
   "nx": {
@@ -46,24 +46,27 @@
         "executor": "@nx/js:node",
         "defaultConfiguration": "development",
         "dependsOn": [
-          "build"
+          {
+            "target": "build",
+            "projects": "dependencies"
+          }
         ],
         "options": {
-          "buildTarget": "@fortino/ingestor:build",
+          "buildTarget": "@finnotate/ingestor:build",
           "runBuildTargetDependencies": false
         },
         "configurations": {
           "development": {
-            "buildTarget": "@fortino/ingestor:build:development"
+            "buildTarget": "@finnotate/ingestor:build:development"
           },
           "production": {
-            "buildTarget": "@fortino/ingestor:build:production"
+            "buildTarget": "@finnotate/ingestor:build:production"
           }
         }
       }
     }
   },
-  "devDependencies": {
-    "@fortino/domain":"workspace:*"
+  "dependencies": {
+    "@finnotate/domain":"workspace:*"
   }
 }
