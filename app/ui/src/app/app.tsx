@@ -1,11 +1,13 @@
-import { TransactionFunnelAnimation } from '../components/onboarding/transaction-funnel-animation';
-
-// Page components
+import Onboarding from '../components/onboarding/onboarding';
+import { ThemeProvider } from '../contexts/theme-context';
+import { ThemeToggle } from '../components/ui/theme-toggle';
 
 export function App() {
   return (
-    
-    <TransactionFunnelAnimation/>
+    <ThemeProvider>
+      <ThemeToggle />
+      <Onboarding />
+    </ThemeProvider>
   );
 }
 
