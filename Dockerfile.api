@@ -1,0 +1,48 @@
+# Build stage
+FROM node:18-alpine AS builder
+
+# Set working directory
+WORKDIR /app
+
+# Enable corepack
+RUN corepack enable
+
+# Copy package files first for better layer caching
+COPY package*.json ./
+COPY pnpm-lock.yaml ./
+COPY pnpm-workspace.yaml ./
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
+COPY . .
+
+# Build the API application
+RUN npx nx build rest-api
+
+# Production stage
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Enable corepack
+RUN corepack enable
+
+# Copy package files
+COPY package*.json ./
+COPY pnpm-lock.yaml ./
+COPY pnpm-workspace.yaml ./
+
+# Install only production dependencies
+RUN pnpm install --frozen-lockfile --prod
+
+# Copy built application
+COPY --from=builder /app/dist/app/rest-api ./
+
+# Expose port 3000
+EXPOSE 3000
+
+# Start the application
+CMD ["node", "main.js"]
