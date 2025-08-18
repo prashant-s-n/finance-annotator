@@ -17,7 +17,6 @@
         "main": "app/rest-api/src/main.ts",
         "tsConfig": "app/rest-api/tsconfig.app.json",
         "assets": ["app/rest-api/src/assets"],
-        "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,
           "outExtension": {
