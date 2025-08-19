@@ -1,6 +1,7 @@
 <img src="./assets/logo.png" alt="Finnotate logo" width="118" height="120">
 
-> [!WARNING] This project is currently under development and is very unstable. Please
+> [!WARNING] 
+> This project is currently under development and is very unstable. Please
 > use this project for experimental purposes and not for production use.
 
 # Finance Annotator (finnotate)
