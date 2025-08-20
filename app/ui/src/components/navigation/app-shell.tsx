@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FiHome, FiPieChart, FiLayers, FiFileText, FiChevronUp, FiChevronDown } from 'react-icons/fi';
+import { FiHome, FiPieChart, FiLayers, FiFileText, FiChevronUp, FiChevronDown, FiCreditCard, FiDollarSign, FiUser } from 'react-icons/fi';
 
 export const AppShell: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
     const [isMinimized, setIsMinimized] = useState(false);
@@ -10,6 +10,12 @@ export const AppShell: React.FC<{ children?: React.ReactNode }> = ({ children })
         { icon: FiPieChart, path: '/transactions', label: 'Transactions' },
         { icon: FiFileText, path: '/reports', label: 'Reports' },
         { icon: FiLayers, path: '/categories', label: 'Categories' }
+    ];
+    
+    const assetsEntitiesItems = [
+        { icon: FiDollarSign, path: '/bank-accounts', label: 'Bank Accounts' },
+        { icon: FiUser, path: '/debit-cards', label: 'Debit Cards' },
+        { icon: FiCreditCard, path: '/credit-cards', label: 'Credit Cards' }
     ];
     
     return (
@@ -55,6 +61,39 @@ export const AppShell: React.FC<{ children?: React.ReactNode }> = ({ children })
                             </div>
                         );
                     })}
+                    
+                    {/* Separator */}
+                    <div className="w-8 h-px bg-slate-700 my-2"></div>
+                    
+                    {/* Assets & Entities Section */}
+                    {assetsEntitiesItems.map((item, index) => {
+                        const Icon = item.icon;
+                        return (
+                            <div 
+                                key={item.path}
+                                className={`group relative transition-all duration-500 ease-out ${
+                                    isMinimized 
+                                        ? 'opacity-0 -translate-y-2 scale-95' 
+                                        : 'opacity-100 translate-y-0 scale-100'
+                                }`}
+                                style={{
+                                    transitionDelay: isMinimized 
+                                        ? `${(assetsEntitiesItems.length - index - 1) * 75}ms` 
+                                        : `${(navigationItems.length + index + 1) * 75}ms`
+                                }}
+                            >
+                                <Link 
+                                    to={item.path} 
+                                    className="flex items-center justify-center h-10 w-10 rounded-md hover:bg-slate-800 transition-all duration-200 ease-out hover:scale-105 active:scale-95 shadow-sm"
+                                >
+                                    <Icon className="h-5 w-5 transition-transform duration-200 ease-out" />
+                                </Link>
+                                <div className="absolute left-14 top-1/2 transform -translate-y-1/2 bg-slate-900 text-slate-50 shadow-lg px-3 py-2 rounded-md text-sm whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-out border border-slate-700 group-hover:translate-x-1">
+                                    {item.label}
+                                </div>
+                            </div>
+                        );
+                    })}
                 </nav>
                 
                 {/* Minimizer button - at bottom with padding */}
@@ -64,17 +103,17 @@ export const AppShell: React.FC<{ children?: React.ReactNode }> = ({ children })
                         className="p-2 hover:bg-slate-800 rounded-md transition-all duration-200 ease-out hover:scale-110 active:scale-95 flex items-center justify-center group"
                     >
                         {isMinimized ? 
-                            <FiChevronUp className="w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-y-[-1px]" /> : 
-                            <FiChevronDown className="w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-y-[1px]" />
+                            <FiChevronUp className="w-4 h-4 transition-transform duration-300 ease-out group-hover:-translate-y-0.5" /> : 
+                            <FiChevronDown className="w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-y-0.5" />
                         }
                     </button>
                 </div>
             </div>
             
             {/* Main content */}
-            <div className="flex-1 overflow-auto p-6 bg-background ml-24 transition-all duration-300 ease-out">
+            <div className="flex-1 overflow-auto pl-20 transition-all duration-300 ease-out">
                 {children || <div className="text-center text-foreground mt-10 p-6 bg-card rounded-xl shadow-sm border animate-in fade-in-50 duration-500">Welcome to the Big Apple! Select an option from the sidebar.</div>}
             </div>
         </div>
     );
-}
+};
