@@ -1,7 +1,19 @@
 import React from 'react';
-import { FiTrendingUp, FiDollarSign, FiCreditCard, FiPieChart, FiBarChart2, FiActivity } from 'react-icons/fi';
+import { FiActivity, FiCreditCard, FiDollarSign, FiTrendingUp, FiShoppingBag, FiCoffee, FiTrendingDown, FiZap, FiHeart, FiBook } from 'react-icons/fi';
 
 export const Dashboard: React.FC = () => {
+  // Sample transaction data with formatted dates and category badges
+  const recentTransactions = [
+    { id: 1, transaction: 'Grocery Store Purchase', category: 'Food & Dining', categoryIcon: FiCoffee, categoryColor: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200', date: '15 Jan 2024' },
+    { id: 4, transaction: 'Coffee Shop', category: 'Food & Dining', categoryIcon: FiCoffee, categoryColor: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200', date: '12 Jan 2024' },
+    { id: 5, transaction: 'Online Shopping', category: 'Shopping', categoryIcon: FiShoppingBag, categoryColor: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200', date: '11 Jan 2024' },
+    { id: 6, transaction: 'Salary Deposit', category: 'Income', categoryIcon: FiTrendingUp, categoryColor: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200', date: '10 Jan 2024' },
+    { id: 7, transaction: 'Electric Bill', category: 'Utilities', categoryIcon: FiZap, categoryColor: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200', date: '09 Jan 2024' },
+    { id: 8, transaction: 'Restaurant Dinner', category: 'Food & Dining', categoryIcon: FiCoffee, categoryColor: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200', date: '08 Jan 2024' },
+    { id: 9, transaction: 'Gym Membership', category: 'Health & Fitness', categoryIcon: FiHeart, categoryColor: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200', date: '07 Jan 2024' },
+    { id: 10, transaction: 'Book Purchase', category: 'Education', categoryIcon: FiBook, categoryColor: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200', date: '06 Jan 2024' }
+  ];
+
   return (
     <div className="flex-1 p-6 ml-20 bg-background">
       {/* Header */}
@@ -10,120 +22,90 @@ export const Dashboard: React.FC = () => {
         <p className="text-muted-foreground">Welcome back! Here's your financial overview.</p>
       </div>
 
-      {/* Financial Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-card p-6 rounded-lg border border-border shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <div className="h-12 w-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-              <FiDollarSign className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+      {/* Financial Overview Cards - Compact Version */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="bg-card p-4 rounded-lg border border-border shadow-sm">
+          <div className="flex items-center mb-3">
+            <div className="h-8 w-8 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mr-3">
+              <FiActivity className="h-4 w-4 text-blue-600 dark:text-blue-400" />
             </div>
-            <FiTrendingUp className="h-4 w-4 text-green-500" />
-          </div>
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">Total Balance</p>
-            <p className="text-2xl font-bold text-foreground">$66,080.00</p>
-            <p className="text-xs text-green-600 dark:text-green-400 mt-1">+2.5% from last month</p>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Transactions This Year</p>
+              <p className="text-xl font-bold text-foreground">1,247</p>
+            </div>
           </div>
         </div>
 
-        <div className="bg-card p-6 rounded-lg border border-border shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <div className="h-12 w-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
-              <FiTrendingUp className="h-6 w-6 text-green-600 dark:text-green-400" />
+        <div className="bg-card p-4 rounded-lg border border-border shadow-sm">
+          <div className="flex items-center mb-3">
+            <div className="h-8 w-8 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mr-3">
+              <FiCreditCard className="h-4 w-4 text-green-600 dark:text-green-400" />
             </div>
-            <FiActivity className="h-4 w-4 text-green-500" />
-          </div>
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">Monthly Income</p>
-            <p className="text-2xl font-bold text-foreground">$4,250.00</p>
-            <p className="text-xs text-green-600 dark:text-green-400 mt-1">+8.2% from last month</p>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">No. of Accounts</p>
+              <p className="text-xl font-bold text-foreground">8</p>
+            </div>
           </div>
         </div>
 
-        <div className="bg-card p-6 rounded-lg border border-border shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <div className="h-12 w-12 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center">
-              <FiCreditCard className="h-6 w-6 text-red-600 dark:text-red-400" />
+        <div className="bg-card p-4 rounded-lg border border-border shadow-sm">
+          <div className="flex items-center mb-3">
+            <div className="h-8 w-8 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mr-3">
+              <FiDollarSign className="h-4 w-4 text-purple-600 dark:text-purple-400" />
             </div>
-            <FiBarChart2 className="h-4 w-4 text-red-500" />
-          </div>
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">Monthly Expenses</p>
-            <p className="text-2xl font-bold text-foreground">$2,890.45</p>
-            <p className="text-xs text-red-600 dark:text-red-400 mt-1">+3.1% from last month</p>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Total Balance</p>
+              <p className="text-xl font-bold text-foreground">$66,080</p>
+            </div>
           </div>
         </div>
 
-        <div className="bg-card p-6 rounded-lg border border-border shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <div className="h-12 w-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center">
-              <FiPieChart className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+        <div className="bg-card p-4 rounded-lg border border-border shadow-sm">
+          <div className="flex items-center mb-3">
+            <div className="h-8 w-8 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center mr-3">
+              <FiTrendingUp className="h-4 w-4 text-orange-600 dark:text-orange-400" />
             </div>
-            <FiTrendingUp className="h-4 w-4 text-green-500" />
-          </div>
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">Savings Rate</p>
-            <p className="text-2xl font-bold text-foreground">32%</p>
-            <p className="text-xs text-green-600 dark:text-green-400 mt-1">+5% from last month</p>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Monthly Savings</p>
+              <p className="text-xl font-bold text-foreground">$1,360</p>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Spending Chart */}
-        <div className="bg-card p-6 rounded-lg border border-border shadow-sm">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-foreground">Monthly Spending</h3>
-            <FiBarChart2 className="h-5 w-5 text-muted-foreground" />
-          </div>
-          <div className="h-64 flex items-end justify-between space-x-2">
-            {[
-              { month: 'Jan', amount: 2890, height: 'h-32' },
-              { month: 'Feb', amount: 3200, height: 'h-40' },
-              { month: 'Mar', amount: 2750, height: 'h-28' },
-              { month: 'Apr', amount: 3100, height: 'h-36' },
-              { month: 'May', amount: 2650, height: 'h-24' },
-              { month: 'Jun', amount: 2890, height: 'h-32' }
-            ].map((data, index) => (
-              <div key={index} className="flex flex-col items-center flex-1">
-                <div className={`w-full bg-blue-500 dark:bg-blue-400 rounded-t ${data.height} mb-2`}></div>
-                <span className="text-xs text-muted-foreground">{data.month}</span>
-              </div>
-            ))}
-          </div>
+      {/* Recent Transactions Table */}
+      <div className="bg-card rounded-lg border border-border shadow-sm">
+        <div className="p-6 border-b border-border">
+          <h2 className="text-xl font-semibold text-foreground">Recent Transactions</h2>
+          <p className="text-sm text-muted-foreground mt-1">Last 10 transactions</p>
         </div>
-
-        {/* Income vs Expenses Chart */}
-        <div className="bg-card p-6 rounded-lg border border-border shadow-sm">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-foreground">Income vs Expenses</h3>
-            <FiPieChart className="h-5 w-5 text-muted-foreground" />
-          </div>
-          <div className="h-64 flex items-center justify-center">
-            <div className="relative w-48 h-48">
-              {/* Simplified pie chart representation */}
-              <div className="w-full h-full rounded-full bg-gradient-to-r from-green-400 to-green-600 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-red-400 to-red-600 origin-center transform rotate-45"></div>
-              </div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <p className="text-sm font-medium text-foreground">Net Income</p>
-                  <p className="text-lg font-bold text-green-600 dark:text-green-400">$1,359.55</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-center space-x-6 mt-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              <span className="text-sm text-muted-foreground">Income</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-              <span className="text-sm text-muted-foreground">Expenses</span>
-            </div>
-          </div>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="text-left p-4 font-medium text-muted-foreground">Transaction</th>
+                <th className="text-left p-4 font-medium text-muted-foreground">Category</th>
+                <th className="text-left p-4 font-medium text-muted-foreground">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recentTransactions.map((transaction) => {
+                const IconComponent = transaction.categoryIcon;
+                return (
+                  <tr key={transaction.id} className="border-b border-border hover:bg-muted/50">
+                    <td className="p-4 text-foreground">{transaction.transaction}</td>
+                    <td className="p-4">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${transaction.categoryColor}`}>
+                        <IconComponent className="w-3 h-3 mr-1" />
+                        {transaction.category}
+                      </span>
+                    </td>
+                    <td className="p-4 text-muted-foreground">{transaction.date}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
