@@ -31,37 +31,32 @@ services:
     # depends_on:
     #   - database
 
-  # Optional: Database service (uncomment if needed)
-  # database:
-  #   image: postgres:15-alpine
-  #   environment:
-  #     POSTGRES_DB: finnotate
-  #     POSTGRES_USER: finnotate
-  #     POSTGRES_PASSWORD: password
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-  #   ports:
-  #     - "5432:5432"
-  #   networks:
-  #     - finnotate-network
-  #   restart: unless-stopped
-
-  seaweedfs:
-      image: chrislusf/seaweedfs
-      ports:
-        - "8333:8333"  # S3 API
-        - "9333:9333"  # Master
-        - "8080:8080"  # Volume server
-        - "8888:8888"  # Filer
-      command: server -s3
-      volumes:
-        - seaweedfs_data:/data
-      environment:
-        - AWS_ACCESS_KEY_ID=admin
-        - AWS_SECRET_ACCESS_KEY=spongebob
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    networks:
+      - finnotate-network
+    volumes:
+      - 'minio_data:/data'  # Note: different path for official image
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=pk909090090
+    command: server /data --address ":9000" --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
 
 volumes:
   seaweedfs_data:
+  minio_data:
+
 
 networks:
   finnotate-network:
