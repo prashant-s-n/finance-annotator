@@ -67,6 +67,7 @@
     }
   },
   "dependencies": {
-    "@finnotate/domain":"workspace:*"
+    "@finnotate/domain": "workspace:*",
+    "@finnotate/config": "workspace:*"
   }
 }

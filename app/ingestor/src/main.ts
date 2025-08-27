@@ -1,47 +1,15 @@
-import {Effect, Schedule} from "effect";
-import { NodeContext, NodeRuntime } from "@effect/platform-node";
+import { Effect } from 'effect';
 
-const raw = [
-    {
-        description: "UPI/P2M/135529580272/IRCTC App/Paytm Pay/Oid100",
-        amount: {
-            currency: "usd",
-            amount: "100",
-        },
-        type: "credit",
-        effectiveAt: "2025-01-01T00:00:00Z",
-        runningBalance: {
-            currency: "usd",
-            amount: "100",
-        },
-        
-    },
-    {
-        description: "UPI/P2M/135529580272/IRCTC App/Paytm Pay/Oid100",
-        amount: {
-            currency: "usd",
-            amount: "100",
-        },
-        type: "debit",
-        effectiveAt: "2025-01-01T00:00:00Z",
-        runningBalance: {
-            currency: "usd",
-            amount: "0",
-        },
-    },
-]
+import { AppConfiguration, AppConfigurationLive } from '@finnotate/config';
 
-const action = () => Effect.gen(function* () {
-    const trx = yield* Effect.forEach(raw, (item) => {
-        return Effect.log(item);
-    })
+const program = Effect.gen(function* () {
+  yield* Effect.log('Starting Ingestion engine v 1.0.0');
 
-    return Effect.succeed(trx);
+  const config = yield* AppConfiguration;
 
-})
+  yield* Effect.log('Config port', config.port);
 
-const policy = Schedule.addDelay(Schedule.forever, () => "1 hour");
+  yield* Effect.never;
+});
 
-const program = Effect.repeat(action(), policy);
-
-NodeRuntime.runMain(program.pipe(Effect.provide(NodeContext.layer)))
+Effect.runFork(program.pipe(Effect.provide(AppConfigurationLive)));
