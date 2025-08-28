@@ -24,12 +24,34 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - DATABASE_URL=postgresql://finnotate_user:finnotate_password@postgres:5432/finnotate_db
     networks:
       - finnotate-network
+    depends_on:
+      - postgres
     restart: unless-stopped
-    # Uncomment if you need a database
-    # depends_on:
-    #   - database
+
+  # PostgreSQL Database Service
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - finnotate-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=finnotate_db
+      - POSTGRES_USER=finnotate_user
+      - POSTGRES_PASSWORD=finnotate_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U finnotate_user -d finnotate_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
 
   minio:
     image: minio/minio:latest
@@ -54,14 +76,9 @@ services:
     restart: unless-stopped
 
 volumes:
-  seaweedfs_data:
   minio_data:
-
+  postgres_data:
 
 networks:
   finnotate-network:
     driver: bridge
-
-# Uncomment if using database
-# volumes:
-#   postgres_data:
