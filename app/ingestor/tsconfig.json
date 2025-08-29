@@ -4,6 +4,9 @@
   "include": [],
   "references": [
     {
+      "path": "../../lib/config"
+    },
+    {
       "path": "../../lib/domain"
     },
     {
