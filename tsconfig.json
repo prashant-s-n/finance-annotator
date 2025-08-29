@@ -7,9 +7,6 @@
       "path": "./lib/domain"
     },
     {
-      "path": "./app/rest-api-e2e"
-    },
-    {
       "path": "./app/rest-api"
     },
     {
